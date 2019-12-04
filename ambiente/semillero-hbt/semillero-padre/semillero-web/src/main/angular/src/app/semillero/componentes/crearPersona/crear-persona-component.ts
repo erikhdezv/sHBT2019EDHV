@@ -7,7 +7,8 @@ import { ComicDTO } from '../../dto/comic.dto';
  */
 @Component({
     selector: 'crear-persona',
-    templateUrl: './crear-persona-component.html'
+    templateUrl: './crear-persona-component.html',
+    styleUrls: ['./crear-persona-component.css']
 })
 export class CrearPersonaComponent implements OnInit{
     
@@ -18,6 +19,14 @@ export class CrearPersonaComponent implements OnInit{
     public listaNombres = null;
 
     public comicDTO : ComicDTO;
+
+    /**
+     * @author 
+     * @description Constructor de la clase CrearPersonaComponent
+     */
+    constructor(){
+
+    }
 
     ngOnInit() : void {
         this.nombreInstructorGlobalPrivado = "Semillero2019";
@@ -77,7 +86,10 @@ export class CrearPersonaComponent implements OnInit{
         
 
     }
-
+    /**
+     * @author 
+     * @description
+     */
     public inicializarComponente() : Array<string> {
         let retorno : any;
         let objeto = undefined;

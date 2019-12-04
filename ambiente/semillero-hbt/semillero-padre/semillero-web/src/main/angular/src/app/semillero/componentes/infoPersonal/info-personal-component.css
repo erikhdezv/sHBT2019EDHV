@@ -1,0 +1,14 @@
+/**
+* @description Estilos para el punto Uno, mostrar nombres y ciudad de cada uno de nosotros
+*/
+.punto1{
+    font: bold sans-serif;
+}
+
+/**
+* @description Estilos para el punto Dos; muestra nombres y ciudad almacenados en variables privadas a través de un metodo
+*/
+.punto2{
+    font: bold Segoe UI;
+    color: Blue;
+}
