@@ -7,7 +7,7 @@ import java.util.List;
 
 import javax.ejb.Local;
 
-//import com.hbt.semillero.dto.PersonajesDTO;
+import com.hbt.semillero.dto.PersonajeDTO;
 
 /**
  * Ésta interfaz contine los metodos del EJB GestionarPersonajesComic 
@@ -28,7 +28,6 @@ import javax.ejb.Local;
  *
  */
 
-@SuppressWarnings("unused")
 @Local
 public interface IGestionarPersonajesComicLocal {
 	/**
@@ -39,7 +38,7 @@ public interface IGestionarPersonajesComicLocal {
 	 * 
 	 * @param ComicDTO comicNuevo
 	 */
-	public void crearPersonajes();
+	public void crearPersonajes(PersonajeDTO personajeDTO);
 
 	/**
 	 * 
@@ -62,23 +61,24 @@ public interface IGestionarPersonajesComicLocal {
 	public void eliminarComic();
 
 	/**
+	 * @return 
 	 * 
 	 * Metodo encargado de retornar la informacion de un Personaje comic
 	 * 
-	 * NO SE HABILITA DEBIDO A QUE NO SE HA CREADO EL DTO PARA ESTE BEANS
 	 * 
 	 * @return comic Resultado de la consulta
 	 * @throws 
 	 */
-	//public ComicDTO consultarComic(/*String idComic*/);
+	public List<PersonajeDTO> consultarPersonajes();
 
 	/**
 	 * 
 	 * Metodo encargado de retornar una lista de Personajes comics
 	 * 
-	 * NO SE HABILITA DEBIDO A QUE NO SE HA CREADO EL DTO PARA ESTE BEANS
 	 * 
 	 * @return
 	 */
-	//public List<ComicDTO> consultarComics();
+	public List<PersonajeDTO> consultarPersonajes(Long idComic);
+	
+	public void actualizarPersonaje();
 }
