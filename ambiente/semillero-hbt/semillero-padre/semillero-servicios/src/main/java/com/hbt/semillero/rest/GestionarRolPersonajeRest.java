@@ -1,3 +1,6 @@
+/**
+ * 
+ */
 package com.hbt.semillero.rest;
 
 import java.util.List;
@@ -13,27 +16,42 @@ import javax.ws.rs.core.MediaType;
 
 import org.apache.log4j.Logger;
 
-import com.hbt.semillero.dto.PersonajeDTO;
+import com.hbt.semillero.dto.RolDTO;
 import com.hbt.semillero.ejb.GestionarComicBean;
-import com.hbt.semillero.ejb.IGestionarPersonajesComicLocal;
+import com.hbt.semillero.ejb.IGestionarRolPersonajeLocal;
 
 /**
  * <b>Descripción:<b> Clase que determina el servicio rest que permite gestionar
- * un personajes de los comic
+ * un Rol para los personajes de los comic
  * 
  * @author ehernandez
  * @version 1.0
  */
-@Path("/GestionarPersonaje")
-public class GestionarPersonajesRest {
-	
+@Path("/GestionarRolPersonaje")
+public class GestionarRolPersonajeRest {
+
 	/**
-	 * Atriburo que permite gestionar un peronaje del comic
+	 * Atriburo que permite gestionar un rol para los personajes de los comic
 	 */
 	@EJB
-	private IGestionarPersonajesComicLocal gestionarPersonajeComicBean;
+	private IGestionarRolPersonajeLocal gestionarRolPersonajeLocal;
 	
 	final static Logger logger = Logger.getLogger(GestionarComicBean.class);
+	
+	/**
+	 *  GestionarRolPersonaje/saludo
+	 * @return
+	 */
+	@GET
+	@Path("/saludo")
+	@Produces(MediaType.APPLICATION_JSON)
+	public String primerRest() {
+		logger.debug("Inicia metodo actualizarPersonaje");
+		
+		logger.debug("Finaliza metodo actualizarPersonaje");
+		return "Prueba inicial servicios rest en el semillero java hbt";
+	}
+	
 	/**
 	 * 
 	 * Metodo encargado de crear los personajes de comic
@@ -47,32 +65,12 @@ public class GestionarPersonajesRest {
 	@Path("/crear")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public void crearPersonajes(PersonajeDTO personajeDTO) {
+	public void crearRolPersonajes(RolDTO rolDTO) {
 		logger.debug("Inicia metodo crearPersonajes");
 		
-		gestionarPersonajeComicBean.crearPersonajes(personajeDTO);
+		gestionarRolPersonajeLocal.crearRolPersonajes(rolDTO);
 	}
 	
-	/**
-	 * 
-	 * Metodo encargado de consultar un Personaje comic modificarlo y guardarlo
-	 * 
-	 * @author ehernandez
-	 * 
-	 * @param Long id, String nombre, ComicDTO comicNuevo
-	 */
-	//public void modificarComic();
-
-	/**
-	 * 
-	 * Metodo encargado de eliminar un Personaje comic modificarlo y guardarlo
-	 * 
-	 * @author ehernandez
-	 * 
-	 * @param Long idComic
-	 */
-	//public void eliminarComic();
-
 	/**
 	 * @return 
 	 * 
@@ -86,27 +84,9 @@ public class GestionarPersonajesRest {
 	@GET
 	@Path("/consultarPersonajesPorId")
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<PersonajeDTO> consultarPersonajes(@QueryParam("idComic") String idComic){
-		return gestionarPersonajeComicBean.consultarPersonajes(idComic.toString());
+	public List<RolDTO> consultarRolPersonajes(@QueryParam("idRol") String idRol){
+		return gestionarRolPersonajeLocal.consultarRolPersonajes(idRol.toString());
 	}
-
-	/*@GET
-	@Path("/saludo")
-	//@Produces(MediaType.APPLICATION_JSON)
-	public String primerRest() {
-		return "Prueba inicial servicios rest en el semillero java hbt";
-	}*/
-	
-	/**
-	 * 
-	 * Metodo encargado de retornar una lista de Personajes comics
-	 * 
-	 * 
-	 * @return
-	 */
-	/*public void consultarPersonaje() {
-		
-	}*/
 	
 	/**
 	 * 
@@ -119,9 +99,7 @@ public class GestionarPersonajesRest {
 	@GET
 	@Path("/consultarPersonajes")
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<PersonajeDTO> consultarPersonajes(){
-		return gestionarPersonajeComicBean.consultarPersonajes();
+	public List<RolDTO> consultarRolPersonajes(){
+		return gestionarRolPersonajeLocal.consultarRolPersonajes();
 	}
-	
-	//public void actualizarPersonaje();
 }
