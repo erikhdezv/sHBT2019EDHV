@@ -22,9 +22,13 @@ export class BienvenidaComponent implements OnInit {
     console.log("entro al constructor del componente bienvenida");
   }
 
+  /**
+    * @description Evento angular que se ejecuta para inicializar nuestras variables
+    */
   ngOnInit(): void {
     this.urlImagen = "https://www.elempleo.com/sitios-empresariales/colombia/heinsohn-business-technology/img/elempleo-02.jpg";
     let data = this.activatedRoute.snapshot.params;
+    
     
     console.log("Parametros recibidos " + data);
 

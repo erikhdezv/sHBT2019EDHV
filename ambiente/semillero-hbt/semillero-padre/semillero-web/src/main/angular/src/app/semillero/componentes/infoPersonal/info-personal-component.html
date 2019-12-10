@@ -4,3 +4,67 @@
 <h1 class="punto2">
     {{info()}}
 </h1>
+<br>
+
+<div class="accordion" id="accordionExample">
+    <div class="card">
+        <div class="alert alert-success" id="headingOne">
+            <h2 class="mb-0">
+                <h4 class="alert-heading" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">Lista de Datos!</h4>
+            </h2>
+        </div>
+    
+        <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
+        <div class="card-body">
+            <div class="alert alert-success" role="alert">
+                <pre>{{_listaInfoPersonalDTOView}}</pre>
+            </div> 
+        </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="alert alert-success" id="headingTwo">
+            <h2 class="mb-0">
+                <h4 class="alert-heading" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">Eliminar tercer elemento de la lista</h4>
+            </h2>
+        </div>
+        <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
+            <div class="card-body">
+                <div class="alert alert-primary" id="headingTwo" *ngIf="!vshow">
+                    <h2 class="mb-0">
+                        <h4 class="alert-heading" (click)="eliminarTercerElemento()">Click para eliminar informacion!</h4>
+                    </h2>
+                </div>
+                <div *ngIf="vshow">
+                    <h5>Se ha eliminado el comic nombreDelComic <b>{{elementRemoved.nombre}}</b></h5>
+                    <div class="alert alert-success" role="alert">
+                        <pre>{{elementRemovedJson}}</pre>
+                    </div> 
+                </div>
+                
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+            <div class="alert alert-success" id="headingTwo">
+                <h2 class="mb-0">
+                    <h4 class="alert-heading" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">Lista de Comic</h4>
+                </h2>
+            </div>
+            <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
+                <div class="card-body">
+                    <div class="alert alert-success" role="alert">
+                        Aqui los noimbre de los comic
+                        <ul>
+                            <li *ngFor="let info of listaInfoPersonalCopy">
+                                {{ info.nombre }}
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+</div>
+<br>
