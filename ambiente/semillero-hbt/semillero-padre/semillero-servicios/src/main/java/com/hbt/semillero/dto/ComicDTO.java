@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+import javax.persistence.Transient;
+
 import com.hbt.semillero.entidad.EstadoEnum;
 import com.hbt.semillero.entidad.TematicaEnum;
 
@@ -32,6 +34,11 @@ public class ComicDTO implements Serializable {
 	private LocalDate fechaVenta;
 	private EstadoEnum estadoEnum;
 	private Long cantidad;
+	
+	// Atributo que almacenará el valor del iva, el cual no sera almacenado en Base de Datos.
+	private float iva;
+	// Atributo que almacenará el valor total del comic, el cual no sera almacenado en Base de Datos.
+	private BigDecimal precioTotal;
 
 	/**
 	 * Metodo encargado de retornar el valor del atributo id
@@ -258,6 +265,34 @@ public class ComicDTO implements Serializable {
 	 */
 	public static ComicDTO valueOf(String arg) {
 		return JsonUtils.valueOf(arg, ComicDTO.class);
+	}
+
+	/**
+	 * @return the iva
+	 */
+	public float getIva() {
+		return iva;
+	}
+
+	/**
+	 * @param iva the iva to set
+	 */
+	public void setIva(float iva) {
+		this.iva = iva;
+	}
+
+	/**
+	 * @return the precioTotal
+	 */
+	public BigDecimal getPrecioTotal() {
+		return precioTotal;
+	}
+
+	/**
+	 * @param precioTotal the precioTotal to set
+	 */
+	public void setPrecioTotal(BigDecimal precioTotal) {
+		this.precioTotal = precioTotal;
 	}
 
 	/**

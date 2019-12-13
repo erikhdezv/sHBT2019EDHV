@@ -3,6 +3,7 @@
  */
 package com.hbt.semillero.ejb;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,6 +19,9 @@ import org.apache.log4j.Logger;
 
 import com.hbt.semillero.dto.ComicDTO;
 import com.hbt.semillero.entidad.Comic;
+import com.hbt.semillero.entidad.EstadoEnum;
+import com.hbt.semillero.entidad.TematicaEnum;
+import com.hbt.semillero.interfaces.IUtilities;
 
 /**
  * <b>Descripción:<b> Clase que determina el bean para realizar las gestion de
@@ -28,10 +32,10 @@ import com.hbt.semillero.entidad.Comic;
  */
 @Stateless
 @TransactionManagement(TransactionManagementType.CONTAINER)
-public class GestionarComicBean implements IGestionarComicLocal {
+public class GestionarComicBean implements IGestionarComicLocal, IUtilities {
 
 	final static Logger logger = Logger.getLogger(GestionarComicBean.class);
-	
+
 	/**
 	 * Atributo em que se usa para interacturar con el contexto de persistencia.
 	 */
@@ -56,11 +60,11 @@ public class GestionarComicBean implements IGestionarComicLocal {
 	 */
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public void modificarComic(Long id, String nombre, ComicDTO comicNuevo) {
-		Comic comicModificar ;
-		if(comicNuevo==null) {
+		Comic comicModificar;
+		if (comicNuevo == null) {
 			// Entidad a modificar
 			comicModificar = em.find(Comic.class, id);
-		}else {
+		} else {
 			comicModificar = convertirComicDTOToComic(comicNuevo);
 		}
 		comicModificar.setNombre(nombre);
@@ -99,10 +103,10 @@ public class GestionarComicBean implements IGestionarComicLocal {
 	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
 	public List<ComicDTO> consultarComics() {
 		logger.debug("Se ejecuta el comando");
-		
+
 		List<ComicDTO> resultadosComicDTO = new ArrayList<ComicDTO>();
 		List<Comic> resultados = em.createQuery("select c from Comic c").getResultList();
-		for (Comic comic:resultados) {
+		for (Comic comic : resultados) {
 			resultadosComicDTO.add(convertirComicToComicDTO(comic));
 		}
 		return resultadosComicDTO;
@@ -117,8 +121,8 @@ public class GestionarComicBean implements IGestionarComicLocal {
 	 */
 	private ComicDTO convertirComicToComicDTO(Comic comic) {
 		ComicDTO comicDTO = new ComicDTO();
-		if(comic.getId()!=null) {
-		 comicDTO.setId(comic.getId().toString());
+		if (comic.getId() != null) {
+			comicDTO.setId(comic.getId().toString());
 		}
 		comicDTO.setNombre(comic.getNombre());
 		comicDTO.setEditorial(comic.getEditorial());
@@ -131,6 +135,12 @@ public class GestionarComicBean implements IGestionarComicLocal {
 		comicDTO.setFechaVenta(comic.getFechaVenta());
 		comicDTO.setEstadoEnum(comic.getEstadoEnum());
 		comicDTO.setCantidad(comic.getCantidad());
+
+		// Calculoar el iva modificar Comentarios
+		comicDTO.setIva(this.calcularIva(comic.getTematicaEnum()));
+		// Calculamos el precio total
+		comicDTO.setPrecioTotal(this.calcularPrecioTotal(comicDTO.getIva(), comic.getPrecio()));
+
 		return comicDTO;
 	}
 
@@ -143,7 +153,7 @@ public class GestionarComicBean implements IGestionarComicLocal {
 	 */
 	private Comic convertirComicDTOToComic(ComicDTO comicDTO) {
 		Comic comic = new Comic();
-		if(comicDTO.getId()!=null) {
+		if (comicDTO.getId() != null) {
 			comic.setId(Long.parseLong(comicDTO.getId()));
 		}
 		comic.setNombre(comicDTO.getNombre());
@@ -158,5 +168,59 @@ public class GestionarComicBean implements IGestionarComicLocal {
 		comic.setEstadoEnum(comicDTO.getEstadoEnum());
 		comic.setCantidad(comicDTO.getCantidad());
 		return comic;
+	}
+
+	/**
+	 * 
+	 * Metodo encargado de retornar el calor del iva para el comic segun la tematica
+	 * @author Erik Dario Hernandez Vasquez, erikdhv@gmail.com
+	 * 
+	 * @param tematicaEnum : TematicaEnum
+	 * @return ivaTematica : float
+	 */
+	@Override
+	public float calcularIva(TematicaEnum tematicaEnum) {
+		float ivaTematica = 0;
+		
+		switch (tematicaEnum.toString()) {
+			case "AVENTURAS":
+				ivaTematica = (float) 0.05;
+				break;
+			case "BELICO":
+				ivaTematica = (float) 0.16;
+				break;
+			case "DEPORTIVO":
+				ivaTematica = (float) 0.10;
+				break;
+			case "FANTASTICO":
+				ivaTematica = (float) 0.05;
+				break;
+			case "CIENCIA_FICCION":
+				ivaTematica = (float) 0.16;
+				break;
+			case "HISTORICO":
+				ivaTematica = (float) 0.05;
+				break;
+			case "HORROR":
+				ivaTematica = (float) 0.16;
+				break;
+		}
+		return ivaTematica;
+	}
+
+	/**
+	 * 
+	 * Metodo encargado de retornar el valor del comic mas el valor del iva del comic, 
+	 * lo que sería el valor total a pagar por el comic
+	 * @author Erik Dario Hernandez Vasquez, erikdhv@gmail.com
+	 * 
+	 * @param iva : float, price : BigDecimal
+	 * @return precioTotal : BigDecimal
+	 */
+	@Override
+	public BigDecimal calcularPrecioTotal(float iva, BigDecimal price) {
+		// TODO Auto-generated method stub
+		BigDecimal precioTotal = price.add(price.multiply(new BigDecimal(iva)));
+		return precioTotal;
 	}
 }

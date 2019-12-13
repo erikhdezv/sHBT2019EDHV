@@ -16,6 +16,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 /**
  * <b>Descripción:<b> Clase que determina la entidad que permite representar la
@@ -47,7 +48,12 @@ public class Comic implements Serializable {
 	private LocalDate fechaVenta;
 	private EstadoEnum estadoEnum;
 	private Long cantidad;
-
+	
+	// Atributo que almacenara el valor del iva, el cual no sera almacenado en Base de Datos.
+	private float iva;
+	// Atributo que almacenara el valor total del comic, el cual no sera almacenado en Base de Datos.
+	private BigDecimal precioTotal;
+	
 	/**
 	 * Constructor de la clase.
 	 */
@@ -286,6 +292,36 @@ public class Comic implements Serializable {
 	 */
 	public void setCantidad(Long cantidad) {
 		this.cantidad = cantidad;
+	}
+	
+	/**
+	 * @return the iva
+	 */
+	@Transient
+	public float getIva() {
+		return iva;
+	}
+
+	/**
+	 * @param iva the iva to set
+	 */
+	public void setIva(float iva) {
+		this.iva = iva;
+	}
+
+	/**
+	 * @return the precioTotal
+	 */
+	@Transient
+	public BigDecimal getPrecioTotal() {
+		return precioTotal;
+	}
+
+	/**
+	 * @param precioTotal the precioTotal to set
+	 */
+	public void setPrecioTotal(BigDecimal precioTotal) {
+		this.precioTotal = precioTotal;
 	}
 
 	/**
