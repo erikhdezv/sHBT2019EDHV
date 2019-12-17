@@ -47,7 +47,7 @@ export class GestionarComicComponent implements OnInit {
         this.gestionarComicForm = this.fb.group({
             nombre : [null, Validators.required],
             editorial : [null],
-            tematica : [null],
+            tematica : ['AVENTURAS'],
             coleccion : [null],
             numeroPaginas : [null],
             precio : [null],
@@ -117,8 +117,21 @@ export class GestionarComicComponent implements OnInit {
 
     }
 
+    /**
+     * @description Metodo que elimina un elemento del DTO
+     * @author Erik Darío Hernández Vásquez, erikdhv@gmail.com
+     * @param comic : any
+     */
     public editarComic(comic : any) : void {
-        this.router.navigate(['bienvenida',comic]);
+        // buscamos el elemento a eliminar en el objeto de datos
+        var i = this.listaComics.indexOf( comic );
+        // Si encontramos el elemento, se procede a eliminarlo del DTO
+        if ( i !== -1 ) {
+            // Se elimina el elemento del DTO
+            this.listaComics.splice( i, 1 );
+        }
+        // Se hace el llamadoa la funcion que limpia el formulario
+        this.limpiarFormulario();
     }
 
     private limpiarFormulario() : void {
