@@ -19,7 +19,6 @@ import org.apache.log4j.Logger;
 
 import com.hbt.semillero.dto.ComicDTO;
 import com.hbt.semillero.entidad.Comic;
-import com.hbt.semillero.entidad.EstadoEnum;
 import com.hbt.semillero.entidad.TematicaEnum;
 import com.hbt.semillero.interfaces.IUtilities;
 
@@ -105,6 +104,7 @@ public class GestionarComicBean implements IGestionarComicLocal, IUtilities {
 		logger.debug("Se ejecuta el comando");
 
 		List<ComicDTO> resultadosComicDTO = new ArrayList<ComicDTO>();
+		@SuppressWarnings("unchecked")
 		List<Comic> resultados = em.createQuery("select c from Comic c").getResultList();
 		for (Comic comic : resultados) {
 			resultadosComicDTO.add(convertirComicToComicDTO(comic));
@@ -135,7 +135,7 @@ public class GestionarComicBean implements IGestionarComicLocal, IUtilities {
 		comicDTO.setFechaVenta(comic.getFechaVenta());
 		comicDTO.setEstadoEnum(comic.getEstadoEnum());
 		comicDTO.setCantidad(comic.getCantidad());
-
+		logger.debug("????Que tematica enviamos????? "+comic.getTematicaEnum());
 		// Calculoar el iva modificar Comentarios
 		comicDTO.setIva(this.calcularIva(comic.getTematicaEnum()));
 		// Calculamos el precio total
@@ -181,8 +181,10 @@ public class GestionarComicBean implements IGestionarComicLocal, IUtilities {
 	@Override
 	public float calcularIva(TematicaEnum tematicaEnum) {
 		float ivaTematica = 0;
+		logger.debug("****LA TEMAtICA ES "+tematicaEnum);
 		
-		switch (tematicaEnum.toString()) {
+		if (tematicaEnum != null) {
+			switch (tematicaEnum.toString()) {
 			case "AVENTURAS":
 				ivaTematica = (float) 0.05;
 				break;
@@ -204,7 +206,13 @@ public class GestionarComicBean implements IGestionarComicLocal, IUtilities {
 			case "HORROR":
 				ivaTematica = (float) 0.16;
 				break;
+			default:
+				ivaTematica = (float) 0.5;
+				break;
+			}			
 		}
+		
+		logger.debug("****LA ivaTematica ES "+ivaTematica);
 		return ivaTematica;
 	}
 

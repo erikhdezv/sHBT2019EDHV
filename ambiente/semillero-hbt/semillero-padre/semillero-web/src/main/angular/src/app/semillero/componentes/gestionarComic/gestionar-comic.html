@@ -109,8 +109,9 @@
                             <td>{{comic.color ? 'Si' : 'No' }}</td>
                             <td>
                                 <i class="fas fa-search 2x ml-1" (click)="consultarComic(i)" title="Consultar"></i>
-                                <i class="fas fa-pencil-alt 2x ml-1"  [routerLink]="['/bienvenida',comic]" title="Editar"></i>
-                                <i class="far fa-times-circle 2x ml-1" (click)="editarComic(comic)" title="Eliminar"></i>
+                                <i class="fas fa-pencil-alt 2x ml-1" (click)="updateComic(comic)" title="Actualizar"></i>
+                                <i class="fas fa-eye 2x ml-1"  [routerLink]="['/bienvenida',comic]" title="View"></i>
+                                <i class="far fa-times-circle 2x ml-1" (click)="deleteComic(comic)" title="Eliminar"></i>
                             </td>
                         </tr>
                     </tbody>

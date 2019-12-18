@@ -16,6 +16,7 @@ import javax.persistence.PersistenceContext;
 
 import org.apache.log4j.Logger;
 
+import com.hbt.semillero.dto.ComicDTO;
 import com.hbt.semillero.dto.PersonajeDTO;
 import com.hbt.semillero.entidad.Comic;
 import com.hbt.semillero.entidad.Personaje;
@@ -79,8 +80,19 @@ public class GestionarPersonajesComicBean implements IGestionarPersonajesComicLo
 	 * @see com.hbt.semillero.ejb.IGestionarPersonajesComicLocal#modificarComic()
 	 */
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
-	public void modificarComic() {
+	public void modificarComic(Long id, String nombre, PersonajeDTO personajeNuevo) {
 		logger.debug("Inicia metodo actualizarPersonaje");
+		
+		Personaje personajeModificar;
+		if (personajeNuevo == null) {
+			// Entidad a modificar
+			personajeModificar = entityManger.find(Personaje.class, id);
+		}else {
+			personajeModificar = convertirDTOEntidad(personajeNuevo);
+		}
+		
+		personajeModificar.setNombre(nombre);
+		entityManger.merge(personajeModificar);
 		
 		logger.debug("Finaliza metodo actualizarPersonaje");
 	}
@@ -109,6 +121,7 @@ public class GestionarPersonajesComicBean implements IGestionarPersonajesComicLo
 				+"FROM Personaje personaje ";
 		
 		List<PersonajeDTO> listaPersonajeDTO = new ArrayList<PersonajeDTO>();
+		@SuppressWarnings("unchecked")
 		List<Personaje> listaPersonajes = entityManger.createQuery(query).getResultList();
 		for(Personaje personajes : listaPersonajes) {
 			listaPersonajeDTO.add(convertirEntidadDTO(personajes));
@@ -123,24 +136,23 @@ public class GestionarPersonajesComicBean implements IGestionarPersonajesComicLo
 	 * @see com.hbt.semillero.ejb.IGestionarPersonajesComicLocal#consultarPersonajes(java.lang.String)
 	 */
 	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
-	public List<PersonajeDTO> consultarPersonajes(String idComic) {
-		logger.debug("Inicia metodo consultarPersonaje");
-		
+	public PersonajeDTO consultarPersonajes(String idComic) {
 		String query = "SELECT personaje "
 				+ "FROM Personaje personaje "
 				+ "WHERE personaje.comic.id = :idComic";
 		
+		@SuppressWarnings("unchecked")
 		List<Personaje> listaPersonajes = entityManger.createQuery(query).setParameter("idComic", Long.parseLong(idComic)).getResultList();
 		
-		List<PersonajeDTO> listaPersonajeDTO = new ArrayList<PersonajeDTO>();
+		//List<PersonajeDTO> listaPersonajeDTO = new ArrayList<PersonajeDTO>();
+		PersonajeDTO listaPersonajeDTO = null;
 		
 		for(Personaje personaje : listaPersonajes) {
-			listaPersonajeDTO.add(convertirEntidadDTO(personaje));
+			listaPersonajeDTO = convertirEntidadDTO(personaje);
 		}
 		logger.debug("Finaliza metodo consultarPersonaje");
 		
 		return listaPersonajeDTO;
-		
 	}
 	
 	/*

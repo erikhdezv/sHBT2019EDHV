@@ -60,7 +60,7 @@ public class GestionarComicRest {
 	@GET
 	@Path("/consultarComics")
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<ComicDTO> consultarComic() {
+	public List<ComicDTO> consultarComics() {
 		return gestionarComicEJB.consultarComics();
 
 	}
@@ -118,7 +118,7 @@ public class GestionarComicRest {
 	/**
 	 * 
 	 * Metodo encargado de eliminar un comic dado el id
-	 * 
+	 * http://localhost:8085/semillero-servicios/rest/GestionarComic/eliminar?idComic=1
 	 * @param idComic identificador del comic
 	 */
 	@POST

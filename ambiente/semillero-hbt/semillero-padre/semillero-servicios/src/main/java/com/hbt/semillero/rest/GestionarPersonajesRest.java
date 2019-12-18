@@ -61,7 +61,20 @@ public class GestionarPersonajesRest {
 	 * 
 	 * @param Long id, String nombre, ComicDTO comicNuevo
 	 */
-	//public void modificarComic();
+	
+	/**
+	 * 
+	 * Metodo encargado de modificar el nombre de un comic
+	 * http://localhost:8085/semillero-servicios/rest/GestionarPersonaje/modificarPersonajes?idComic=1&nombre=nuevonombre
+	 * @param idComic identificador del comic a buscar
+	 * @param nombre nombre nuevo del comic
+	 */
+	@POST
+	@Path("/modificarPersonajes")
+	@Produces(MediaType.APPLICATION_JSON)
+	public void modificarPersonaje(@QueryParam("idComic") Long idComic, @QueryParam("nombre") String nombre) {
+		gestionarPersonajeComicBean.modificarComic(idComic, nombre, null);
+	}
 
 	/**
 	 * 
@@ -70,8 +83,18 @@ public class GestionarPersonajesRest {
 	 * @author ehernandez
 	 * 
 	 * @param Long idComic
+	 * http://localhost:8085/semillero-servicios/rest/GestionarPersonaje/eliminarPersonaje?idComic=1
 	 */
-	//public void eliminarComic();
+	@POST
+	@Path("/eliminarPersonaje")
+	@Produces(MediaType.APPLICATION_JSON)
+	public void eliminarPersonaje(@QueryParam("idComic") Long idComic) {
+		if (idComic != null) {
+			@SuppressWarnings("unused")
+			PersonajeDTO personajeDTO = gestionarPersonajeComicBean.consultarPersonajes(idComic.toString());
+
+		}
+	}
 
 	/**
 	 * @return 
@@ -86,27 +109,13 @@ public class GestionarPersonajesRest {
 	@GET
 	@Path("/consultarPersonajesPorId")
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<PersonajeDTO> consultarPersonajes(@QueryParam("idComic") String idComic){
-		return gestionarPersonajeComicBean.consultarPersonajes(idComic.toString());
+	public PersonajeDTO consultarPersonajes(@QueryParam("idComic") String idComic){
+		if (idComic != null) {
+			PersonajeDTO personajeDTO = gestionarPersonajeComicBean.consultarPersonajes(idComic.toString());
+			return personajeDTO;
+		}
+		return null;
 	}
-
-	/*@GET
-	@Path("/saludo")
-	//@Produces(MediaType.APPLICATION_JSON)
-	public String primerRest() {
-		return "Prueba inicial servicios rest en el semillero java hbt";
-	}*/
-	
-	/**
-	 * 
-	 * Metodo encargado de retornar una lista de Personajes comics
-	 * 
-	 * 
-	 * @return
-	 */
-	/*public void consultarPersonaje() {
-		
-	}*/
 	
 	/**
 	 * 
@@ -123,5 +132,4 @@ public class GestionarPersonajesRest {
 		return gestionarPersonajeComicBean.consultarPersonajes();
 	}
 	
-	//public void actualizarPersonaje();
 }

@@ -3,6 +3,7 @@ import { ComicDTO } from '../../dto/comic.dto';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { EjemploService } from '../../services/ejemplo.service';
 
 /**
  * @description Componenete gestionar comic, el cual contiene la logica CRUD
@@ -39,11 +40,19 @@ export class GestionarComicComponent implements OnInit {
     public submitted : boolean;
 
     /**
+     * Atributo que indica si se van actualizar los datos
+     */
+    public edicion : boolean;
+
+    public mensajeExito : String;
+
+    /**
      * @description Este es el constructor del componente GestionarComicComponent
      * @author Diego Fernando Alvarez Silva <dalvarez@heinsohn.com.co>
      */
     constructor(private fb : FormBuilder,
-        private router : Router) {
+        private router : Router,
+        private gestionarComicService : EjemploService) {
         this.gestionarComicForm = this.fb.group({
             nombre : [null, Validators.required],
             editorial : [null],
@@ -64,6 +73,7 @@ export class GestionarComicComponent implements OnInit {
         console.log("Ingreso al al evento oninit");
         this.comic = new ComicDTO();
         this.listaComics = new Array<ComicDTO>();
+        this.consultarComics();
     }
 
     /**
@@ -74,9 +84,9 @@ export class GestionarComicComponent implements OnInit {
         if(this.gestionarComicForm.invalid) {
             return;
         }
-        this.idComic++;
+        //this.idComic++;
         this.comic = new ComicDTO();
-        this.comic.id = this.idComic + "";
+        //this.comic.id = this.idComic + "";
         this.comic.nombre = this.gestionarComicForm.controls.nombre.value;
         this.comic.editorial = this.gestionarComicForm.controls.editorial.value;
         this.comic.tematica = this.gestionarComicForm.controls.tematica.value;
@@ -86,9 +96,29 @@ export class GestionarComicComponent implements OnInit {
         this.comic.autores = this.gestionarComicForm.controls.autores.value;
         this.comic.color = this.gestionarComicForm.controls.color.value;
         
-        this.listaComics.push(this.comic);
-        this.limpiarFormulario();
+        this.gestionarComicService.crearComic(this.comic).subscribe(resultado => {
+            this.mensajeExito = resultado.mensajeEjecucion;
+            this.consultarComics();
+            this.limpiarFormulario();
+        }, error => {
+            console.log("Se a presentado un error al consumir el servicio de Crear comic");
+        });
+
+        //this.listaComics.push(this.comic);
         
+    }
+
+
+    /**
+     * Metodo que permite consultar un comic de la tabla y sus detalles e inhabilitar el formulario
+     * @param posicion en la lista del comic seleccionado
+     */
+    private consultarComics() : void {
+        this.gestionarComicService.consultarComics().subscribe(listaComics => {
+            this.listaComics = listaComics;
+        }, error => {
+            console.log("Se a presentado un error al cargar los datos");
+        });
     }
 
     /**
@@ -97,6 +127,7 @@ export class GestionarComicComponent implements OnInit {
      */
     public consultarComic(posicion : number) : void {
         let comic = this.listaComics[posicion];
+        console.log(JSON.stringify(comic));
         this.gestionarComicForm.controls.nombre.setValue(comic.nombre);
         this.gestionarComicForm.controls.editorial.setValue(comic.editorial);
         this.gestionarComicForm.controls.tematica.setValue(comic.tematica);
@@ -105,15 +136,29 @@ export class GestionarComicComponent implements OnInit {
         this.gestionarComicForm.controls.precio.setValue(comic.precio);
         this.gestionarComicForm.controls.autores.setValue(comic.autores);
         this.gestionarComicForm.controls.color.setValue(comic.color);
-        this.gestionarComicForm.controls.nombre.disable();
-        this.gestionarComicForm.controls.editorial.disable();
-        this.gestionarComicForm.controls.tematica.disable();
-        this.gestionarComicForm.controls.coleccion.disable();
-        this.gestionarComicForm.controls.numeroPaginas.disable();
-        this.gestionarComicForm.controls.precio.disable();
-        this.gestionarComicForm.controls.autores.disable();
-        this.gestionarComicForm.controls.color.disable();
+        if (this.edicion == false){
+            this.gestionarComicForm.controls.nombre.disable();
+            this.gestionarComicForm.controls.editorial.disable();
+            this.gestionarComicForm.controls.tematica.disable();
+            this.gestionarComicForm.controls.coleccion.disable();
+            this.gestionarComicForm.controls.numeroPaginas.disable();
+            this.gestionarComicForm.controls.precio.disable();
+            this.gestionarComicForm.controls.autores.disable();
+            this.gestionarComicForm.controls.color.disable();
+        }
 //        this.gestionarComicForm.controls.color.enable(); para habilitar el campo
+
+    }
+
+    /**
+     * @description Metodo encargado de cargar los datos al formulario para actualizar
+     * @author Erik Darío Hernández Vásquez, erikdhv@gmail.com
+     * @param comic : any
+     */
+    public updateComic(comic: any) : void {
+        this.edicion = true;
+        // Cargamos al formulario los Datos del item seleccionado
+        this.consultarComic(comic.id-1);
 
     }
 
@@ -122,7 +167,7 @@ export class GestionarComicComponent implements OnInit {
      * @author Erik Darío Hernández Vásquez, erikdhv@gmail.com
      * @param comic : any
      */
-    public editarComic(comic : any) : void {
+    public deleteComic(comic : any) : void {
         // buscamos el elemento a eliminar en el objeto de datos
         var i = this.listaComics.indexOf( comic );
         // Si encontramos el elemento, se procede a eliminarlo del DTO
@@ -136,6 +181,7 @@ export class GestionarComicComponent implements OnInit {
 
     private limpiarFormulario() : void {
         this.submitted = false;
+        this.edicion = false;
         this.gestionarComicForm.controls.nombre.setValue(null);
         this.gestionarComicForm.controls.editorial.setValue(null);
         this.gestionarComicForm.controls.tematica.setValue(null);

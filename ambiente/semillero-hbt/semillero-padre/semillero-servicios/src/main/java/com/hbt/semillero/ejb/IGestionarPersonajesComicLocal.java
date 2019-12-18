@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.ejb.Local;
 
+import com.hbt.semillero.dto.ComicDTO;
 import com.hbt.semillero.dto.PersonajeDTO;
 
 /**
@@ -38,10 +39,10 @@ public interface IGestionarPersonajesComicLocal {
 	 * 
 	 * @author ehernandez
 	 * 
-	 * @param Long id, String nombre, ComicDTO comicNuevo
+	 * @param Long id, String nombre, PersonajeDTO personajeNuevo
 	 */
-	public void modificarComic();
-
+	public void modificarComic(Long id, String nombre, PersonajeDTO personajeNuevo);
+	
 	/**
 	 * 
 	 * Metodo encargado de eliminar un Personaje comic modificarlo y guardarlo
@@ -70,7 +71,8 @@ public interface IGestionarPersonajesComicLocal {
 	 * 
 	 * @return
 	 */
-	public List<PersonajeDTO> consultarPersonajes(String idComic);
+	//public List<PersonajeDTO> consultarPersonajes(String idComic);
+	public PersonajeDTO consultarPersonajes(String idComic);
 	
 	public void actualizarPersonaje();
 }
