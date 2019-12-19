@@ -1,5 +1,6 @@
 package com.hbt.semillero.rest;
 
+import java.sql.SQLException;
 import java.util.List;
 
 import javax.ejb.EJB;
@@ -49,18 +50,9 @@ public class GestionarPersonajesRest {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public void crearPersonajes(PersonajeDTO personajeDTO) {
 		logger.debug("Inicia metodo crearPersonajes");
-		
 		gestionarPersonajeComicBean.crearPersonajes(personajeDTO);
+		logger.debug("Finaliza el metodo crearPersonajes");
 	}
-	
-	/**
-	 * 
-	 * Metodo encargado de consultar un Personaje comic modificarlo y guardarlo
-	 * 
-	 * @author ehernandez
-	 * 
-	 * @param Long id, String nombre, ComicDTO comicNuevo
-	 */
 	
 	/**
 	 * 
@@ -72,8 +64,8 @@ public class GestionarPersonajesRest {
 	@POST
 	@Path("/modificarPersonajes")
 	@Produces(MediaType.APPLICATION_JSON)
-	public void modificarPersonaje(@QueryParam("idComic") Long idComic, @QueryParam("nombre") String nombre) {
-		gestionarPersonajeComicBean.modificarComic(idComic, nombre, null);
+	public void modificarPersonaje(@QueryParam("idPersonaje") Long idPersonaje, @QueryParam("nombre") String nombre, @QueryParam("PersonajeDTO") PersonajeDTO personajeDTO) {
+		gestionarPersonajeComicBean.modificarPersonaje(idPersonaje, nombre, personajeDTO);
 	}
 
 	/**
@@ -83,17 +75,13 @@ public class GestionarPersonajesRest {
 	 * @author ehernandez
 	 * 
 	 * @param Long idComic
-	 * http://localhost:8085/semillero-servicios/rest/GestionarPersonaje/eliminarPersonaje?idComic=1
+	 * http://localhost:8085/semillero-servicios/rest/GestionarPersonaje/eliminarPersonaje?idPersonaje=1
 	 */
 	@POST
 	@Path("/eliminarPersonaje")
 	@Produces(MediaType.APPLICATION_JSON)
-	public void eliminarPersonaje(@QueryParam("idComic") Long idComic) {
-		if (idComic != null) {
-			@SuppressWarnings("unused")
-			PersonajeDTO personajeDTO = gestionarPersonajeComicBean.consultarPersonajes(idComic.toString());
-
-		}
+	public void eliminarPersonaje(@QueryParam("id") Long id) {
+		gestionarPersonajeComicBean.eliminarPersonaje(id);
 	}
 
 	/**
@@ -109,13 +97,23 @@ public class GestionarPersonajesRest {
 	@GET
 	@Path("/consultarPersonajesPorId")
 	@Produces(MediaType.APPLICATION_JSON)
+	public List<PersonajeDTO> consultarPersonajes(@QueryParam("idComic") String idComic){
+		if (idComic != null) {
+			List<PersonajeDTO> personajeDTO = gestionarPersonajeComicBean.consultarPersonajes(idComic.toString());
+			return personajeDTO;
+		}
+		return null;
+	}
+	/*@GET
+	@Path("/consultarPersonajesPorId")
+	@Produces(MediaType.APPLICATION_JSON)
 	public PersonajeDTO consultarPersonajes(@QueryParam("idComic") String idComic){
 		if (idComic != null) {
 			PersonajeDTO personajeDTO = gestionarPersonajeComicBean.consultarPersonajes(idComic.toString());
 			return personajeDTO;
 		}
 		return null;
-	}
+	}*/
 	
 	/**
 	 * 

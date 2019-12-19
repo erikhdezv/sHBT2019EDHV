@@ -121,6 +121,7 @@ public class GestionarComicRest {
 	 * http://localhost:8085/semillero-servicios/rest/GestionarComic/eliminar?idComic=1
 	 * @param idComic identificador del comic
 	 */
+
 	@POST
 	@Path("/eliminar")
 	@Produces(MediaType.APPLICATION_JSON)

@@ -41,7 +41,7 @@ public interface IGestionarPersonajesComicLocal {
 	 * 
 	 * @param Long id, String nombre, PersonajeDTO personajeNuevo
 	 */
-	public void modificarComic(Long id, String nombre, PersonajeDTO personajeNuevo);
+	public void modificarPersonaje(Long id, String nombre, PersonajeDTO personajeNuevo);
 	
 	/**
 	 * 
@@ -51,7 +51,7 @@ public interface IGestionarPersonajesComicLocal {
 	 * 
 	 * @param Long idComic
 	 */
-	public void eliminarComic();
+	public void eliminarPersonaje(Long idPersonaje);
 
 	/**
 	 * @return 
@@ -71,8 +71,7 @@ public interface IGestionarPersonajesComicLocal {
 	 * 
 	 * @return
 	 */
-	//public List<PersonajeDTO> consultarPersonajes(String idComic);
-	public PersonajeDTO consultarPersonajes(String idComic);
+	public List<PersonajeDTO> consultarPersonajes(String idComic);
+	//public PersonajeDTO consultarPersonajes(String idComic);
 	
-	public void actualizarPersonaje();
 }

@@ -56,23 +56,14 @@ public class GestionarPersonajesComicBean implements IGestionarPersonajesComicLo
 	@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 	public void crearPersonajes(PersonajeDTO personajeDTO) {
 		logger.debug("Inicia metodo crearPersonaje");
-		
-		Personaje personaje = convertirDTOEntidad(personajeDTO);
-		entityManger.persist(personaje);
+		try {
+			Personaje personaje = convertirDTOEntidad(personajeDTO);
+			entityManger.persist(personaje);			
+		} catch (Exception e) {
+			logger.error("Se presento un error al guardar los personajes " + e);
+		}
 		
 		logger.debug("Se ejecuta el comando");		
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see com.hbt.semillero.ejb.IGestionarPersonajesComicLocal#actualizarPersonaje()
-	 */
-	@TransactionAttribute(TransactionAttributeType.REQUIRED)
-	@Override
-	public void actualizarPersonaje() {
-		logger.debug("Inicia metodo actualizarPersonaje");
-		
-		logger.debug("Finaliza metodo actualizarPersonaje");
 	}
 	
 	/*
@@ -80,19 +71,31 @@ public class GestionarPersonajesComicBean implements IGestionarPersonajesComicLo
 	 * @see com.hbt.semillero.ejb.IGestionarPersonajesComicLocal#modificarComic()
 	 */
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
-	public void modificarComic(Long id, String nombre, PersonajeDTO personajeNuevo) {
+	public void modificarPersonaje(Long id, String nombre, PersonajeDTO personajeNuevo) {
 		logger.debug("Inicia metodo actualizarPersonaje");
 		
+		// Se crea instancia a la entidad a modificar
 		Personaje personajeModificar;
-		if (personajeNuevo == null) {
-			// Entidad a modificar
-			personajeModificar = entityManger.find(Personaje.class, id);
-		}else {
-			personajeModificar = convertirDTOEntidad(personajeNuevo);
+		//logger.debug("PERSONAJE DTO ES SIGUAL A  "+personajeDTO);
+		try {
+			// Verificamos que el DTO enviado como parametro sea nulo
+			if (personajeNuevo == null) {
+				// Buscamos en la entidad a modificar el registro indicado por Id
+				personajeModificar = entityManger.find(Personaje.class, id);
+				logger.debug("Personaje encontrado modificarPersonaje "+personajeModificar);
+			}else {
+				// Si se envia el DTO se carga en la variable que contiene los datos a modificar
+				personajeModificar = convertirDTOEntidad(personajeNuevo);
+			}
+			
+			// Se asigna el nuevo nombre para el personaje a nodificar. 
+			personajeModificar.setNombre(nombre);
+			// Se aplican los cambios de la modificacion
+			entityManger.merge(personajeModificar);
+			
+		} catch (Exception e) {
+			logger.error("Error al actualizar el Pesonaje del Comic" + e);
 		}
-		
-		personajeModificar.setNombre(nombre);
-		entityManger.merge(personajeModificar);
 		
 		logger.debug("Finaliza metodo actualizarPersonaje");
 	}
@@ -103,10 +106,24 @@ public class GestionarPersonajesComicBean implements IGestionarPersonajesComicLo
 	 */
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	@Override
-	public void eliminarComic() {
-		logger.debug("Inicia metodo actualizarPersonaje");
+	public void eliminarPersonaje(Long id) {
+		logger.debug("Inicia metodo eliminarPersonaje "+id);
+		//Personaje personajeEliminar;
+		try {
+			Personaje personajeEliminar = entityManger.find(Personaje.class, id);
+			
+			logger.debug("Personaje encontrado "+personajeEliminar);
+			if (personajeEliminar != null) {
+				entityManger.remove(personajeEliminar);
+				entityManger.flush();
+				logger.debug("Personaje no encontrado");
+			}
+			
+		} catch (Exception e) {
+			logger.error("Error al eliminar el registro en eliminarPersonaje "+e);
+		}
 		
-		logger.debug("Finaliza metodo actualizarPersonaje");
+		logger.debug("Finaliza metodo eliminarPersonaje");
 	}
 	
 	/*
@@ -120,11 +137,22 @@ public class GestionarPersonajesComicBean implements IGestionarPersonajesComicLo
 		String query = "SELECT personaje "
 				+"FROM Personaje personaje ";
 		
+		// Creamos el Objeto de tipo Lista para el DTO de los Personajes
 		List<PersonajeDTO> listaPersonajeDTO = new ArrayList<PersonajeDTO>();
-		@SuppressWarnings("unchecked")
-		List<Personaje> listaPersonajes = entityManger.createQuery(query).getResultList();
-		for(Personaje personajes : listaPersonajes) {
-			listaPersonajeDTO.add(convertirEntidadDTO(personajes));
+		
+		try {
+			@SuppressWarnings("unchecked")
+			// Asignamos el resultado de la consulta al Entity manager
+			List<Personaje> listaPersonajes = entityManger.createQuery(query).getResultList();
+
+			// Recorremos la lista de personajes Retornados y creamos el la Lista DTO
+			for(Personaje personajes : listaPersonajes) {
+				// Convertimos los datos del tipo Entidad a DTO para luego retornarlos
+				listaPersonajeDTO.add(convertirEntidadDTO(personajes));
+			}
+			
+		} catch (Exception e) {
+			logger.error("Se ha presentado un error al Consultar los personajes "+ e);
 		}
 		logger.debug("Finaliza metodo consultarPersonaje");
 		
@@ -136,20 +164,24 @@ public class GestionarPersonajesComicBean implements IGestionarPersonajesComicLo
 	 * @see com.hbt.semillero.ejb.IGestionarPersonajesComicLocal#consultarPersonajes(java.lang.String)
 	 */
 	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
-	public PersonajeDTO consultarPersonajes(String idComic) {
+	public List<PersonajeDTO> consultarPersonajes(String idComic) {
 		String query = "SELECT personaje "
 				+ "FROM Personaje personaje "
 				+ "WHERE personaje.comic.id = :idComic";
 		
-		@SuppressWarnings("unchecked")
-		List<Personaje> listaPersonajes = entityManger.createQuery(query).setParameter("idComic", Long.parseLong(idComic)).getResultList();
+		List<PersonajeDTO> listaPersonajeDTO = new ArrayList<PersonajeDTO>();
 		
-		//List<PersonajeDTO> listaPersonajeDTO = new ArrayList<PersonajeDTO>();
-		PersonajeDTO listaPersonajeDTO = null;
-		
-		for(Personaje personaje : listaPersonajes) {
-			listaPersonajeDTO = convertirEntidadDTO(personaje);
+		try {
+			@SuppressWarnings("unchecked")
+			List<Personaje> listaPersonajes = entityManger.createQuery(query).setParameter("idComic", Long.parseLong(idComic)).getResultList();
+			
+			for(Personaje personaje : listaPersonajes) {
+				listaPersonajeDTO.add(convertirEntidadDTO(personaje));
+			}			
+		} catch (Exception e) {
+			logger.error("Error al consultar personaje por id de comic " + e);
 		}
+		
 		logger.debug("Finaliza metodo consultarPersonaje");
 		
 		return listaPersonajeDTO;
