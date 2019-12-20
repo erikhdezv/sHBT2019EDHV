@@ -15,7 +15,10 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.jboss.logging.Logger;
+
 import com.hbt.semillero.dto.PersonaDTO;
+import com.hbt.semillero.ejb.GestionarPersonaBean;
 import com.hbt.semillero.ejb.IGestionarPersonaLocal;
 
 /**
@@ -25,7 +28,7 @@ import com.hbt.semillero.ejb.IGestionarPersonaLocal;
 @Path("/GestionarPersona")
 public class GestionarPersonaRest {
 
-	//final static Logger logger = Logger.getLogger(GestionarPersonaBean.class);
+	final static Logger logger = Logger.getLogger(GestionarPersonaBean.class);
 
 	/**
 	* Atriburo que permite gestionar un Persona
@@ -40,9 +43,10 @@ public class GestionarPersonaRest {
 	*/
 	@POST
 	@Path("/crear")
-	@Produces(javax.ws.rs.core.MediaType.APPLICATION_JSON)
-	@Consumes(javax.ws.rs.core.MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
 	public Response crearPersona(PersonaDTO personaDTO) {
+		logger.debug("Dentro del metodo crearPersona "+personaDTO);
 		try {
 			gestionarPersonaEJB.crearPersona(personaDTO);
 			return Response.status(Response.Status.CREATED)

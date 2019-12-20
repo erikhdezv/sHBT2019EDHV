@@ -21,7 +21,11 @@ export { ResultadoDTO } from './semillero/dto/resultado.dto';
 
 import {EjemploService} from './semillero/services/ejemplo.service';
 import {AbstractService} from './semillero/services/template.service';
+import {PersonaService} from './semillero/services/persona.service';
 import { InfoPersonalComponent } from './semillero/componentes/infoPersonal/info-personal-component';
+import { PersonaComponent } from './semillero/componentes/persona/persona.component';
+import { CompraComponent } from './semillero/componentes/compra/compra.component';
+
 
 @NgModule({
   declarations: [
@@ -30,7 +34,9 @@ import { InfoPersonalComponent } from './semillero/componentes/infoPersonal/info
     BienvenidaComponent,
     CrearPersonaComponent,
     GestionarComicComponent,
-    InfoPersonalComponent
+    InfoPersonalComponent,
+    PersonaComponent,
+    CompraComponent
   ],
   imports: [
     BrowserModule,

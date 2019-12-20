@@ -1,0 +1,83 @@
+<div class="container">
+    <form [formGroup]="gestionarPersonaForm">
+        <h1>Gestionar Personas</h1>
+        <hr>
+
+        <div class="row">
+            <div class="col-6">
+                <div class="form-group">
+                    <label for="tipidPersona">Tipo Identificacion:</label>
+                    <select class="form-control" id="tipidPersona" formControlName="tipid">
+                        <option value="CC" selected>Cédula de Ciudadanía</option>
+                        <option value="RC">Registro Civil</option>
+                        <option value="TI">Tarjeta de Identidad</option>
+                        <option value="CE">Cédula de Extrangeía</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-6">
+                <label for="coleccion">Número de Documento:</label>
+                <input type="number" class="form-control" id="numid" formControlName="numid">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-6">
+                <label for="nombrePersona">Nombre:</label>
+                <input type="text" class="form-control" id="nombrePersona" formControlName="nombre"
+                    [ngClass]="{ 'is-invalid': submitted && f.nombre.errors }" maxlength="50">
+                <div *ngIf="submitted && f.nombre.errors">
+                    <span class="text-danger" *ngIf="f.nombre.errors.required">Campo requerido.</span>
+                </div>
+            </div>
+            <div class="col-6">
+                <label for="fecnac">Fecha de Nacimiento:</label>
+                <input type="date" class="form-control" id="fecnac" formControlName="fecnac">
+            </div>
+        </div>
+
+        <br>
+        <div class="row">
+            <div class="col-6">
+                <span></span>
+            </div>
+            <div class="col-6 text-right">
+                <button type="button" class="btn btn-primary" (click)="crearActualizarPersona()">Crear/Editar</button>
+            </div>
+        </div>
+
+        <br>
+        
+        <div class="row" [hidden]="listaPersona.length === 0">
+            <div class="col-12">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Nombre</th>
+                            <th scope="col">Tipo Documento</th>
+                            <th scope="col">Número de Documento</th>
+                            <th scope="col">Fecha Nacimiento</th>
+                            <th scope="col">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!--date:"MM/dd/yy"
+                        | uppercase-->
+                        <tr *ngFor="let persona of listaPersona;let i=index;">
+                            <th scope="row">{{persona.id}}</th>
+                            <td>{{persona.nombre | uppercase }}</td>
+                            <td>{{persona.tipid | uppercase }}</td>
+                            <td>{{persona.numid | number: '.2'}}</td>
+                            <td>{{persona.fecnac | date }}</td>
+                            <td>
+                                <i class="fas fa-search 2x ml-1" (click)="consultarPersonas(i)" title="Consultar"></i>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </form>
+
+</div>

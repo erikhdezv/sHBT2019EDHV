@@ -1,0 +1,80 @@
+<div class="container">
+        <form [formGroup]="gestionarCompraForm">
+            <h1>Gestionar Compras</h1>
+            <hr>
+    
+            <div class="row">
+                <div class="col-6">
+                    <div class="form-group">
+                        <label for="idPersona">Personas:</label>
+                        <select class="form-control" id="idPersona" formControlName="idpersona">
+                            <div *ngFor="let persona of listaPersona;let i=index;">
+                                <option value="{{persona.id}}" selected>{{persona.nombre | uppercase}}</option>
+                            </div>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="form-group">
+                        <label for="idComic">Comic:</label>
+                        <select class="form-control" id="idComic" formControlName="idComic">
+                            <div *ngFor="let comic of listaComic;let i=index;">
+                                <option value="{{comic.id}}">{{comic.nombre | uppercase}}</option>
+                            </div>
+                        </select>
+                    </div>
+                </div>
+            </div>
+    
+            <div class="row">
+                <div class="col-6">
+                    <label for="fecventa">Fecha de Venta:</label>
+                    <input type="text" class="form-control" id="fecventa" formControlName="fecventa">
+                </div>
+                
+            </div>
+    
+            <br>
+            <div class="row">
+                <div class="col-6">
+                    <span></span>
+                </div>
+                <div class="col-6 text-right">
+                    <!--(click)="crearActualizarPersona()"-->
+                    <button type="button" class="btn btn-primary" >Crear/Editar</button>
+                </div>
+            </div>
+    
+            <br>
+            
+            <div class="row" [hidden]="listaPersona.length === 0">
+                <div class="col-12">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Nombre</th>
+                                <th scope="col">Tipo Documento</th>
+                                <th scope="col">Número de Documento</th>
+                                <th scope="col">Fecha Nacimiento</th>
+                                <th scope="col">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let persona of listaPersona;let i=index;">
+                                <th scope="row">{{persona.id}}</th>
+                                <td>{{persona.nombre | uppercase }}</td>
+                                <td>{{persona.tipid | uppercase }}</td>
+                                <td>{{persona.numid | number: '.2'}}</td>
+                                <td>{{persona.fecnac | date }}</td>
+                                <td>
+                                    <i class="fas fa-search 2x ml-1" (click)="consultarPersonas(i)" title="Consultar"></i>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </form>
+    
+    </div>
