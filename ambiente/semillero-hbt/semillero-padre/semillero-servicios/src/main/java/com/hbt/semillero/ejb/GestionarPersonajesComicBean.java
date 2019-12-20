@@ -16,7 +16,6 @@ import javax.persistence.PersistenceContext;
 
 import org.apache.log4j.Logger;
 
-import com.hbt.semillero.dto.ComicDTO;
 import com.hbt.semillero.dto.PersonajeDTO;
 import com.hbt.semillero.entidad.Comic;
 import com.hbt.semillero.entidad.Personaje;
@@ -108,7 +107,7 @@ public class GestionarPersonajesComicBean implements IGestionarPersonajesComicLo
 	@Override
 	public void eliminarPersonaje(Long id) {
 		logger.debug("Inicia metodo eliminarPersonaje "+id);
-		//Personaje personajeEliminar;
+		
 		try {
 			Personaje personajeEliminar = entityManger.find(Personaje.class, id);
 			

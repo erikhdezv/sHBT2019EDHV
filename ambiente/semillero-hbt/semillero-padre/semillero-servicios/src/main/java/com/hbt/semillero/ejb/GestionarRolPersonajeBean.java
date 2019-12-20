@@ -98,6 +98,7 @@ public class GestionarRolPersonajeBean implements IGestionarRolPersonajeLocal{
 				+"FROM Rol rol ";
 		
 		List<RolDTO> listaRolDTO = new ArrayList<RolDTO>();
+		@SuppressWarnings("unchecked")
 		List<Rol> listaRoles = entityManger.createQuery(query).getResultList();
 		for(Rol roles : listaRoles) {
 			listaRolDTO.add(convertirEntidadDTO(roles));
@@ -119,6 +120,7 @@ public class GestionarRolPersonajeBean implements IGestionarRolPersonajeLocal{
 				+ "FROM Rol rol "
 				+ "WHERE personaje.id = :idRol";
 		
+		@SuppressWarnings("unchecked")
 		List<Rol> listaRoles = entityManger.createQuery(query).setParameter("idRol", Long.parseLong(idRol)).getResultList();
 		
 		List<RolDTO> listaRolDTO = new ArrayList<RolDTO>();

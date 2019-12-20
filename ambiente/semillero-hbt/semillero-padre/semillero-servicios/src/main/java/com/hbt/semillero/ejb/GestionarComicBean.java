@@ -227,7 +227,6 @@ public class GestionarComicBean implements IGestionarComicLocal, IUtilities {
 	 */
 	@Override
 	public BigDecimal calcularPrecioTotal(float iva, BigDecimal price) {
-		// TODO Auto-generated method stub
 		BigDecimal precioTotal = price.add(price.multiply(new BigDecimal(iva)));
 		return precioTotal;
 	}

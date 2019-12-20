@@ -6,6 +6,7 @@ package com.hbt.semillero.entidad;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,6 +15,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -48,6 +50,9 @@ public class Comic implements Serializable {
 	private LocalDate fechaVenta;
 	private EstadoEnum estadoEnum;
 	private Long cantidad;
+	
+	@ManyToMany(mappedBy = "VENTA")
+    private List<Venta> ventas;
 	
 	// Atributo que almacenara el valor del iva, el cual no sera almacenado en Base de Datos.
 	private float iva;
